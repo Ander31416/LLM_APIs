@@ -1,4 +1,5 @@
 import base64
+
 import requests
 from groq import Groq
 from openai import OpenAI
@@ -29,7 +30,9 @@ def generate_response_groq_LLaVA(image_url, text):
     }
 
     # Crear la solicitud de completación
-    client = Groq(api_key="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")
+    client = Groq(
+        api_key="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"
+    )
     completion = client.chat.completions.create(
         model="llava-v1.5-7b-4096-preview",
         messages=[message],
@@ -46,7 +49,9 @@ def generate_response_groq_LLaVA(image_url, text):
     return response
 
 def generate_response_openai_gpt4o(image_url, text):
-    client = OpenAI("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")
+    client = OpenAI(
+        api_key="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"
+    )
 
     response = client.chat.completions.create(
         model="gpt-4o-mini",
@@ -81,23 +86,24 @@ def generate_response_openai_gpt4o(image_url, text):
         }
     )
 
-    return str(response)
+    return response.choices[0].message.content
 
 def process_image_and_text(model, image_url, text):
     print("hola")
     if model == "LLaVA":
+        print("groq")
         response = generate_response_groq_LLaVA(image_url, text)
     if model == "GPT4o":
+        print("gpt4")
         response = generate_response_openai_gpt4o(image_url, text)
 
-    return str(response)
-
+    print(response)
+    return response
 """
 # URL de la imagen
 image_url = "https://imagenes.20minutos.es/files/image_990_556/uploads/imagenes/2019/08/08/1028312.jpg"
 
 # Generar la respuesta
 text = "hazme una descripción completa de la imagen"
-response = process_image_and_text(image_url, text)
-print(response.content)
-"""
+response = process_image_and_text("GPT4o", image_url, text)
+print(response)"""

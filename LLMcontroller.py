@@ -24,6 +24,7 @@ def read_root():
 @app.post("/process_image/groq")
 async def process_image_groq_LLaVA(request: ImageRequest):
     # Aquí se procesaría la imagen y el string
+    print("kfjksdjfds")
     response = process_image_and_text("LLaVA", request.image_url, request.description)
     return {
         "message": "Datos recibidos con éxito",
@@ -33,6 +34,7 @@ async def process_image_groq_LLaVA(request: ImageRequest):
 @app.post("/process_image/openai")
 async def process_image_openai_gpt4o(request: ImageRequest):
     # Aquí se procesaría la imagen y el string
+    print("kfjksdjfds")
     response = process_image_and_text("GPT4o", request.image_url, request.description)
     return {
         "message": "Datos recibidos con éxito",
