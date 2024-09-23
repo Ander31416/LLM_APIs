@@ -1,18 +1,26 @@
 import base64
-
 import requests
 from groq import Groq
 from openai import OpenAI
+from dotenv import load_dotenv
+import os
+
+# Load environment variables from .env file
+load_dotenv()
+
+# Accessing the API keys
+GROQ_API_KEY = os.getenv('GROQ_API_KEY')
+OPENAI_API_KEY = os.getenv('OPENAI_API_KEY')
 
 def generate_response_groq_LLaVA(image_url, text):
-    # Descargar la imagen desde la URL
+    # Download the image from the URL
     response = requests.get(image_url)
     image_data = response.content
 
-    # Convertir la imagen a base64
+    # Convert the image to base64
     image_base64 = base64.b64encode(image_data).decode('utf-8')
 
-    # Crear el objeto de mensaje
+    # Create the message object
     message = {
         "role": "user",
         "content": [
@@ -29,10 +37,8 @@ def generate_response_groq_LLaVA(image_url, text):
         ]
     }
 
-    # Crear la solicitud de completación
-    client = Groq(
-        api_key="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"
-    )
+    # Create the completion request
+    client = Groq(api_key=GROQ_API_KEY)
     completion = client.chat.completions.create(
         model="llava-v1.5-7b-4096-preview",
         messages=[message],
@@ -43,16 +49,14 @@ def generate_response_groq_LLaVA(image_url, text):
         stop=None
     )
 
-    # Obtener la respuesta
+    # Get the response
     response = completion.choices[0].message.content
-
     return response
 
 def generate_response_openai_gpt4o(image_url, text):
-    client = OpenAI(
-        api_key="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"
-    )
+    client = OpenAI(api_key=OPENAI_API_KEY)
 
+    input("GPT4o")
     response = client.chat.completions.create(
         model="gpt-4o-mini",
         messages=[
@@ -66,12 +70,12 @@ def generate_response_openai_gpt4o(image_url, text):
                     {
                         "type": "image_url",
                         "image_url": {
-                            "url": "https://imagenes.20minutos.es/files/image_990_556/uploads/imagenes/2019/08/08/1028312.jpg"
+                            "url": str(image_url)
                         }
                     },
                     {
                         "type": "text",
-                        "text": "Describe el contenido de esta imagen"
+                        "text": text
                     }
                 ]
             }
@@ -89,16 +93,17 @@ def generate_response_openai_gpt4o(image_url, text):
     return response.choices[0].message.content
 
 def process_image_and_text(model, image_url, text):
-    print("hola")
+    print("Processing...")
     if model == "LLaVA":
-        print("groq")
+        print("Using Groq")
         response = generate_response_groq_LLaVA(image_url, text)
-    if model == "GPT4o":
-        print("gpt4")
+    elif model == "GPT4o":
+        print("Using GPT-4o")
         response = generate_response_openai_gpt4o(image_url, text)
 
     print(response)
     return response
+
 """
 # URL de la imagen
 image_url = "https://imagenes.20minutos.es/files/image_990_556/uploads/imagenes/2019/08/08/1028312.jpg"

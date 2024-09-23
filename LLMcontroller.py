@@ -40,7 +40,3 @@ async def process_image_openai_gpt4o(request: ImageRequest):
         "message": "Datos recibidos con éxito",
         "response": response
     }
-
-# Ejecutar el servidor en modo local
-# Puedes usar uvicorn desde la línea de comandos con este archivo
-# uvicorn nombre_del_archivo:app --reload
